@@ -6,14 +6,14 @@ using UnityEngine;
 [UpdateInGroup(typeof(InitializationSystemGroup), OrderLast = true)]
 public partial class PlayerInputSystem : SystemBase
 {
-    private PlayerController InputActions;
+    private GameInput InputActions;
     private Entity Player;
 
     protected override void OnCreate()
     {
         RequireForUpdate<PlayerTag>();
         RequireForUpdate<PlayerMoveInput>();
-        InputActions = new PlayerController();
+        InputActions = new GameInput();
     }
 
     protected override void OnStartRunning()
