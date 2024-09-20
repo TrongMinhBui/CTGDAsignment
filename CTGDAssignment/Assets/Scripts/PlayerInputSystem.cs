@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [UpdateInGroup(typeof(InitializationSystemGroup), OrderLast = true)]
 public partial class PlayerInputSystem : SystemBase
@@ -19,15 +20,23 @@ public partial class PlayerInputSystem : SystemBase
     protected override void OnStartRunning()
     {
         InputActions.Enable();
+        InputActions.Player.Shooting.performed += OnShoot;
         Player = SystemAPI.GetSingletonEntity<PlayerTag>();
         
+    }
+
+    private void OnShoot(InputAction.CallbackContext obj)
+    {
+        if (!SystemAPI.Exists(Player)) return;
+        
+        SystemAPI.SetComponentEnabled<FireProjectileTag>(Player, true);
     }
 
     protected override void OnUpdate()
     {
         Vector2 moveInput = InputActions.Player.Movement.ReadValue<Vector2>();
         
-        SystemAPI.SetSingleton(new PlayerMoveInput{ Value = moveInput });
+        SystemAPI.SetSingleton(new PlayerMoveInput { Value = moveInput }) ;
     }
 
     protected override void OnStopRunning()
